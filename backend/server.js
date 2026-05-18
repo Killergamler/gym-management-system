@@ -48,4 +48,6 @@ const bootstrap = async () => {
   }
 };
 
+module.exports = app;
+
 bootstrap();
