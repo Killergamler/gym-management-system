@@ -35,19 +35,18 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-const bootstrap = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`MongoDB connected`);
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  } catch (err) {
-    console.error('Startup error:', err);
-    process.exit(1);
-  }
-};
+connectDB()
+  .then(() => {
+    console.log('MongoDB connected');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;
-
-bootstrap();
