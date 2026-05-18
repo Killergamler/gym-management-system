@@ -1,0 +1,50 @@
+﻿.pw{display:grid;gap:1.5rem;font-family:"Outfit",sans-serif}
+.ph{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.ph h2{font-size:1.8rem;font-weight:900;color:#e8f0fe}
+.ph p{color:#8095b4;font-size:.85rem;margin-top:.15rem}
+.alert{padding:.9rem 1.25rem;border-radius:.85rem;font-size:.88rem;font-weight:600}
+.alert.success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.alert.error{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);color:#fda4af}
+.btn-primary{padding:.8rem 1.4rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;border:none;border-radius:.85rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
+.btn-ghost{padding:.8rem 1.4rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#e8f0fe;font-weight:700;cursor:pointer;font-family:inherit}
+.card{background:rgba(13,17,32,.7);border:1px solid rgba(255,255,255,.08);border-radius:1.25rem;padding:1.5rem;backdrop-filter:blur(14px)}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.card-head h3{font-size:1rem;font-weight:800;color:#e8f0fe}
+.close-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.5rem;color:#8095b4;padding:.3rem .65rem;cursor:pointer}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{display:grid;gap:.35rem}
+.field label{font-size:.72rem;font-weight:700;color:#8095b4;text-transform:uppercase;letter-spacing:.07em}
+.field input,.field select{padding:.82rem 1rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#e8f0fe;font-family:inherit;font-size:.9rem;outline:none;transition:.2s}
+.field input:focus,.field select:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.field.err input,.field.err select{border-color:#f43f5e}
+.field select option{background:#0d1120}
+.err-msg{color:#f43f5e;font-size:.75rem}
+.form-actions{display:flex;gap:.75rem;margin-top:1.25rem;flex-wrap:wrap}
+.loading-wrap{display:flex;align-items:center;gap:.75rem;color:#8095b4;padding:2rem;justify-content:center;pointer-events:none}
+.spinner{width:22px;height:22px;border:3px solid rgba(124,58,237,.2);border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.empty-card{grid-column:1/-1;text-align:center;color:#8095b4;padding:2.5rem;background:rgba(13,17,32,.7);border:1px solid rgba(255,255,255,.08);border-radius:1.25rem}
+.link-btn{border:none;background:transparent;color:#a78bfa;cursor:pointer;font-weight:700;font-family:inherit;font-size:inherit;padding:0}
+.tc{background:rgba(13,17,32,.7);border:1px solid rgba(255,255,255,.08);border-radius:1.25rem;padding:1.5rem;display:grid;gap:.85rem;transition:.2s}
+.tc:hover{border-color:rgba(124,58,237,.3)}
+.tc-top{display:flex;align-items:center;gap:1rem}
+.av{width:52px;height:52px;border-radius:1rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:grid;place-items:center;font-size:1.3rem;font-weight:900;color:#fff;flex-shrink:0}
+.tc-info h3{font-size:1rem;font-weight:800;color:#e8f0fe}
+.spec{color:#06b6d4;font-size:.83rem;font-weight:600}
+.email{color:#8095b4;font-size:.78rem}
+.tc-meta{display:flex;gap:.5rem;flex-wrap:wrap}
+.tag{padding:.28rem .65rem;border-radius:9999px;font-size:.72rem;font-weight:800}
+.tag.shift{background:rgba(99,102,241,.12);color:#a5b4fc}
+.tag.exp{background:rgba(245,158,11,.12);color:#fcd34d}
+.tag.active{background:rgba(34,197,94,.12);color:#86efac}
+.tag.inactive{background:rgba(244,63,94,.12);color:#fda4af}
+.phone{color:#8095b4;font-size:.82rem}
+.tc-actions{display:flex;gap:.6rem}
+.btn-edit{flex:1;padding:.65rem;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:.75rem;color:#a5b4fc;cursor:pointer;font-family:inherit;font-weight:700;font-size:.83rem;transition:.15s}
+.btn-edit:hover{background:rgba(99,102,241,.2)}
+.btn-del{flex:1;padding:.65rem;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.15);border-radius:.75rem;color:#fda4af;cursor:pointer;font-family:inherit;font-weight:700;font-size:.83rem;transition:.15s}
+.btn-del:hover{background:rgba(244,63,94,.18)}
+.btn-del:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}}

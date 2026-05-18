@@ -1,0 +1,73 @@
+<div class="login-shell">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-logo">GYM</div>
+      <div>
+        <h1>GymPro X</h1>
+        <p>Secure Member and Admin Access</p>
+      </div>
+    </div>
+
+    <div class="mode-tabs">
+      <button type="button" [class.active]="mode === 'login'" (click)="switchMode('login')">Sign In</button>
+      <button type="button" [class.active]="mode === 'register'" (click)="switchMode('register')">Register</button>
+    </div>
+
+    <ng-container *ngIf="mode === 'login'; else registerTpl">
+      <div class="demo-pill">
+        <span *ngIf="activeRole === 'admin'">admin&#64;gym.com / admin123</span>
+        <span *ngIf="activeRole === 'member'">user&#64;gym.com / user123</span>
+      </div>
+      <div class="auth-tabs">
+        <button type="button" [class.active]="activeRole === 'admin'" (click)="switchRole('admin')">Admin</button>
+        <button type="button" [class.active]="activeRole === 'member'" (click)="switchRole('member')">Member</button>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" formControlName="email" placeholder="Enter email" />
+          <small class="field-error" *ngIf="isInvalid(loginForm, 'email')">Enter a valid email address</small>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" formControlName="password" placeholder="Enter password" />
+          <small class="field-error" *ngIf="isInvalid(loginForm, 'password')">Password must be at least 6 characters</small>
+        </div>
+        <p class="err-msg" *ngIf="error">{{ error }}</p>
+        <button class="btn btn-grad" type="submit" [disabled]="loading || loginForm.invalid">
+          {{ loading ? 'Signing in...' : 'Sign In' }}
+        </button>
+      </form>
+    </ng-container>
+
+    <ng-template #registerTpl>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" formControlName="name" placeholder="Enter full name" />
+          <small class="field-error" *ngIf="isInvalid(registerForm, 'name')">Name must be at least 2 characters</small>
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" formControlName="email" placeholder="Enter email" />
+          <small class="field-error" *ngIf="isInvalid(registerForm, 'email')">Enter a valid email address</small>
+        </div>
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="text" formControlName="phone" placeholder="Enter phone number" />
+          <small class="field-error" *ngIf="isInvalid(registerForm, 'phone')">Phone number is required</small>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" formControlName="password" placeholder="Enter password" />
+          <small class="field-error" *ngIf="isInvalid(registerForm, 'password')">Password must be at least 6 characters</small>
+        </div>
+        <p class="err-msg" *ngIf="error">{{ error }}</p>
+        <button class="btn btn-grad" type="submit" [disabled]="loading || registerForm.invalid">
+          {{ loading ? 'Creating account...' : 'Create Member Account' }}
+        </button>
+      </form>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+﻿<div class="pw">
+  <div class="ph">
+    <div><h2>Members</h2><p>{{members.length}} total members registered</p></div>
+    <button type="button" class="btn-primary" (click)="openAdd()">+ Add Member</button>
+  </div>
+
+  <div class="alert success" *ngIf="msg && msgType==='success'">{{msg}}</div>
+  <div class="alert error"   *ngIf="msg && msgType==='error'">{{msg}}</div>
+
+  <!-- ADD / EDIT FORM -->
+  <div class="card card-form" *ngIf="showForm">
+    <div class="card-head">
+      <h3>{{editMode ? '✏️ Edit Member' : '➕ Add New Member'}}</h3>
+      <button type="button" class="close-btn" (click)="showForm=false">✕</button>
+    </div>
+    <form [formGroup]="memberForm" (ngSubmit)="save()">
+      <div class="form-grid">
+        <div class="field" [class.err]="isInvalid('name')">
+          <label>Full Name *</label>
+          <input formControlName="name" placeholder="Enter full name">
+          <span class="err-msg" *ngIf="isInvalid('name')">Name is required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('email')">
+          <label>Email *</label>
+          <input formControlName="email" type="email" placeholder="Enter email">
+          <span class="err-msg" *ngIf="isInvalid('email')">Valid email required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('phone')">
+          <label>Phone *</label>
+          <input formControlName="phone" placeholder="Enter phone">
+          <span class="err-msg" *ngIf="isInvalid('phone')">Phone is required</span>
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <select formControlName="gender">
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field" [class.err]="isInvalid('plan')">
+          <label>Plan *</label>
+          <select formControlName="plan">
+            <option value="">Select Plan</option>
+            <option *ngFor="let p of plans" [value]="p._id">{{p.name}} — ₹{{p.price}}/{{p.duration}}mo</option>
+          </select>
+          <span class="err-msg" *ngIf="isInvalid('plan')">Plan is required</span>
+        </div>
+        <div class="field">
+          <label>Trainer</label>
+          <select formControlName="trainer">
+            <option value="">No Trainer</option>
+            <option *ngFor="let t of trainers" [value]="t._id">{{t.name}} ({{t.specialty}})</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Fee Status</label>
+          <select formControlName="feeStatus">
+            <option>Paid</option><option>Pending</option><option>Overdue</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select formControlName="status">
+            <option>Active</option><option>Expired</option><option>Suspended</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Address</label>
+          <input formControlName="address" placeholder="Enter address (optional)">
+        </div>
+        <div class="field full">
+          <label>Emergency Contact</label>
+          <input formControlName="emergency" placeholder="Emergency contact number (optional)">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" [disabled]="saving">
+          {{saving ? 'Saving...' : (editMode ? '💾 Update Member' : '💾 Save Member')}}
+        </button>
+        <button class="btn-ghost" type="button" (click)="showForm=false; msg=''">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div class="card-head wrap">
+      <h3>👥 All Members ({{filtered.length}})</h3>
+      <div class="filters">
+        <input class="search" placeholder="🔍 Search name, email, phone..." [(ngModel)]="search">
+        <select [(ngModel)]="filterStatus">
+          <option value="">All Status</option>
+          <option>Active</option><option>Expired</option><option>Suspended</option>
+        </select>
+        <select [(ngModel)]="filterFee">
+          <option value="">All Fees</option>
+          <option>Paid</option><option>Pending</option><option>Overdue</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="loading-wrap" *ngIf="loading">
+      <div class="spinner"></div> Loading members...
+    </div>
+
+    <div class="empty" *ngIf="!loading && filtered.length === 0">
+      No members found.
+      <button type="button" class="link-btn" (click)="openAdd()">Add your first member →</button>
+    </div>
+
+    <div class="table-wrap" *ngIf="!loading && filtered.length > 0">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Member</th><th>Phone</th><th>Plan</th><th>Trainer</th><th>Expiry</th><th>Status</th><th>Fee</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of filtered">
+            <td class="mid">{{m.memberId}}</td>
+            <td><strong>{{m.name}}</strong><div class="sub">{{m.email}}</div></td>
+            <td>{{m.phone}}</td>
+            <td><span class="plan-chip">{{m.plan?.name}}</span></td>
+            <td>{{m.trainer?.name || '—'}}</td>
+            <td class="mid">{{m.expiryDate | date:'dd MMM yy'}}</td>
+            <td><span class="tag" [class]="m.status.toLowerCase()">{{m.status}}</span></td>
+            <td><span class="tag" [class]="m.feeStatus.toLowerCase()">{{m.feeStatus}}</span></td>
+            <td class="actions">
+              <button type="button" class="btn-edit" (click)="openEdit(m)" title="Edit">✏️</button>
+              <button type="button" class="btn-del" (click)="deleteMember(m._id, m.name)" [disabled]="deleting===m._id" title="Delete">
+                {{deleting===m._id ? '...' : '🗑'}}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

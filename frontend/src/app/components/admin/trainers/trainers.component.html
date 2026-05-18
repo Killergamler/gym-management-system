@@ -1,0 +1,85 @@
+﻿<div class="pw">
+  <div class="ph">
+    <div><h2>Trainers</h2><p>{{trainers.length}} trainers registered</p></div>
+    <button type="button" class="btn-primary" (click)="openAdd()">+ Add Trainer</button>
+  </div>
+
+  <div class="alert success" *ngIf="msg && msgType==='success'">{{msg}}</div>
+  <div class="alert error"   *ngIf="msg && msgType==='error'">{{msg}}</div>
+
+  <div class="card card-form" *ngIf="showForm">
+    <div class="card-head">
+      <h3>{{editMode ? '✏️ Edit Trainer' : '➕ Add New Trainer'}}</h3>
+      <button type="button" class="close-btn" (click)="showForm=false">✕</button>
+    </div>
+    <form [formGroup]="trainerForm" (ngSubmit)="save()">
+      <div class="form-grid">
+        <div class="field" [class.err]="isInvalid('name')">
+          <label>Full Name *</label>
+          <input formControlName="name" placeholder="Trainer name">
+          <span class="err-msg" *ngIf="isInvalid('name')">Required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('email')">
+          <label>Email *</label>
+          <input formControlName="email" type="email" placeholder="trainer@gym.com">
+          <span class="err-msg" *ngIf="isInvalid('email')">Valid email required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('phone')">
+          <label>Phone *</label>
+          <input formControlName="phone" placeholder="Phone number">
+          <span class="err-msg" *ngIf="isInvalid('phone')">Required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('specialty')">
+          <label>Specialty *</label>
+          <input formControlName="specialty" placeholder="e.g. Strength Training">
+          <span class="err-msg" *ngIf="isInvalid('specialty')">Required</span>
+        </div>
+        <div class="field">
+          <label>Shift</label>
+          <select formControlName="shift">
+            <option>Morning</option><option>Evening</option><option>Full Day</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Experience (years)</label>
+          <input formControlName="experience" type="number" min="0" placeholder="Years of experience">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" [disabled]="saving">{{saving ? 'Saving...' : (editMode ? '💾 Update' : '💾 Add Trainer')}}</button>
+        <button class="btn-ghost" type="button" (click)="showForm=false">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading-wrap" *ngIf="loading"><div class="spinner"></div> Loading...</div>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="empty-card" *ngIf="trainers.length===0">
+      No trainers yet.
+      <button type="button" class="link-btn" (click)="openAdd()">Add first trainer →</button>
+    </div>
+    <div class="tc" *ngFor="let t of trainers">
+      <div class="tc-top">
+        <div class="av">{{t.name[0]}}</div>
+        <div class="tc-info">
+          <h3>{{t.name}}</h3>
+          <p class="spec">{{t.specialty}}</p>
+          <p class="email">{{t.email}}</p>
+        </div>
+      </div>
+      <div class="tc-meta">
+        <span class="tag shift">{{t.shift}}</span>
+        <span class="tag exp">{{t.experience}} yrs exp</span>
+        <span class="tag" [class]="t.isActive ? 'active' : 'inactive'">{{t.isActive ? 'Active' : 'Inactive'}}</span>
+      </div>
+      <p class="phone">📞 {{t.phone}}</p>
+      <div class="tc-actions">
+        <button type="button" class="btn-edit" (click)="openEdit(t)">✏️ Edit</button>
+        <button type="button" class="btn-del" (click)="deleteTrainer(t._id, t.name)" [disabled]="deleting===t._id">
+          {{deleting===t._id ? 'Removing...' : '🗑 Remove'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

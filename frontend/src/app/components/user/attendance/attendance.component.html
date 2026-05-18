@@ -1,0 +1,53 @@
+<div class="pw">
+  <div class="ph">
+    <h2>Attendance Tracking</h2>
+    <button type="button" class="btn-primary" [disabled]="checkingIn" (click)="checkIn()">
+      {{ checkingIn ? 'Checking in...' : 'Daily Check-in' }}
+    </button>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading attendance...
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="stats">
+      <div class="sc">
+        <div class="lbl">Monthly Attendance</div>
+        <div class="val">{{ monthlyCount }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Total Attendance</div>
+        <div class="val">{{ totalAttendance }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ch">
+        <h3>Attendance History</h3>
+      </div>
+      <div class="empty" *ngIf="!records.length">No attendance records found.</div>
+      <div class="table-wrap" *ngIf="records.length">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Check In Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of records">
+              <td>{{ record.date | date: 'dd MMM yyyy' }}</td>
+              <td>{{ record.checkInTime | date: 'hh:mm a' }}</td>
+              <td><span class="tag">{{ record.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

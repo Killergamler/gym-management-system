@@ -1,0 +1,62 @@
+<div class="shell" (click)="onOutsideClick($event)">
+  <aside class="sb">
+    <button type="button" class="logo" (click)="goDashboard()">
+      <span>GYM</span>
+      <strong>GymPro X</strong>
+    </button>
+    <nav>
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span>{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+    <div class="sf">
+      <button type="button" (click)="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="tb">
+      <span>Member Portal</span>
+      <div class="tb-right">
+        <div class="notif-wrap" #notifWrap>
+          <button type="button" class="notif-btn" (click)="toggleNotifications($event)">
+            Bell
+            <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+          </button>
+          <div class="notif-panel" *ngIf="notificationOpen">
+            <div class="notif-head">
+              <strong>Notifications</strong>
+              <small *ngIf="loadingNotifications">Loading...</small>
+            </div>
+            <div class="notif-list" *ngIf="notifications.length; else emptyNotifications">
+              <button
+                type="button"
+                class="notif-item"
+                *ngFor="let n of notifications"
+                [class.unread]="!n.isRead"
+                (click)="markAsRead(n, $event)"
+              >
+                <strong>{{ n.title }}</strong>
+                <p>{{ n.message }}</p>
+                <small>{{ n.createdAt | date: 'dd MMM, hh:mm a' }}</small>
+              </button>
+            </div>
+            <ng-template #emptyNotifications>
+              <p class="empty-note">No notifications yet.</p>
+            </ng-template>
+          </div>
+        </div>
+        <span class="chip">{{ user?.name }}</span>
+      </div>
+    </header>
+    <div class="pc">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

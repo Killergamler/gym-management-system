@@ -1,0 +1,97 @@
+<div class="pw">
+  <div class="ph">
+    <h2>Workout Summary</h2>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading workouts...
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="stats">
+      <div class="sc">
+        <div class="lbl">Total Workouts</div>
+        <div class="val">{{ workouts.length }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Calories Burned</div>
+        <div class="val">{{ totalCalories }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Duration (mins)</div>
+        <div class="val">{{ totalDuration }}</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ch">
+          <h3>Track Daily Workout</h3>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="addWorkout()">
+          <div class="form-grid">
+            <div class="field">
+              <label>Workout Name</label>
+              <input formControlName="workoutName" placeholder="Leg Day, HIIT, Cardio" />
+            </div>
+            <div class="field">
+              <label>Calories</label>
+              <input type="number" min="0" formControlName="calories" />
+            </div>
+            <div class="field">
+              <label>Duration (minutes)</label>
+              <input type="number" min="1" formControlName="duration" />
+            </div>
+            <div class="field">
+              <label>Date</label>
+              <input type="date" formControlName="date" />
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="saving">
+            {{ saving ? 'Saving...' : 'Add Workout' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="ch">
+          <h3>Progress Graph</h3>
+        </div>
+        <div class="chart" *ngIf="progressSeries.length; else noGraph">
+          <div class="bar" *ngFor="let row of progressSeries">
+            <div class="fill" [style.height.%]="row.calories ? (row.calories / maxCalories) * 100 : 3"></div>
+            <small>{{ row.label }}</small>
+          </div>
+        </div>
+        <ng-template #noGraph>
+          <div class="empty">Add workouts to see progress.</div>
+        </ng-template>
+      </div>
+
+      <div class="card wide">
+        <div class="ch">
+          <h3>Recent Workouts</h3>
+        </div>
+        <div class="empty" *ngIf="!recentWorkouts.length">No workouts found.</div>
+        <div class="work-list" *ngIf="recentWorkouts.length">
+          <div class="item" *ngFor="let workout of recentWorkouts">
+            <div>
+              <strong>{{ workout.workoutName }}</strong>
+              <p>{{ workout.date | date: 'dd MMM yyyy' }}</p>
+            </div>
+            <div class="meta">
+              <span>{{ workout.calories }} kcal</span>
+              <span>{{ workout.duration }} mins</span>
+              <button type="button" (click)="removeWorkout(workout._id)" [disabled]="deleting === workout._id">
+                {{ deleting === workout._id ? '...' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

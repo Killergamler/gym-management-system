@@ -1,0 +1,123 @@
+﻿<div class="page-wrap">
+  <div class="page-head">
+    <div><h2>Dashboard</h2><p>Welcome back, Admin 👋 — Here is your gym overview</p></div>
+    <div class="head-actions">
+      <button type="button" class="btn-secondary" [disabled]="refreshing" (click)="loadDashboard()">
+        {{ refreshing ? 'Refreshing...' : 'Refresh' }}
+      </button>
+      <button type="button" class="btn-primary" routerLink="/admin/members">+ Add Member</button>
+    </div>
+  </div>
+
+  <div class="error-msg" *ngIf="error">⚠️ {{error}}</div>
+  <div *ngIf="loading" class="loading"><div class="spinner"></div> Loading dashboard...</div>
+
+  <div class="stats-grid" *ngIf="!loading">
+    <div class="stat-card sc1">
+      <div class="sc-icon">👥</div>
+      <div class="sc-info">
+        <div class="label">Total Members</div>
+        <div class="val">{{stats.totalMembers}}</div>
+        <div class="change good">{{stats.activeMembers}} currently active</div>
+      </div>
+    </div>
+    <div class="stat-card sc2">
+      <div class="sc-icon">💰</div>
+      <div class="sc-info">
+        <div class="label">Monthly Revenue</div>
+        <div class="val">₹{{stats.monthlyRevenue | number}}</div>
+        <div class="change good">This month collected</div>
+      </div>
+    </div>
+    <div class="stat-card sc3">
+      <div class="sc-icon">🏋️</div>
+      <div class="sc-info">
+        <div class="label">Active Trainers</div>
+        <div class="val">{{stats.totalTrainers}}</div>
+        <div class="change good">All shifts covered</div>
+      </div>
+    </div>
+    <div class="stat-card sc4">
+      <div class="sc-icon">⚠️</div>
+      <div class="sc-info">
+        <div class="label">Pending Fees</div>
+        <div class="val">{{stats.pendingFees}}</div>
+        <div class="change warn">Need follow-up</div>
+      </div>
+    </div>
+    <div class="stat-card sc5">
+      <div class="sc-icon">📅</div>
+      <div class="sc-info">
+        <div class="label">Today Attendance</div>
+        <div class="val">{{stats.todayAttendance}}</div>
+        <div class="change good">Members checked in</div>
+      </div>
+    </div>
+    <div class="stat-card sc6">
+      <div class="sc-icon">💳</div>
+      <div class="sc-info">
+        <div class="label">Total Revenue</div>
+        <div class="val">₹{{stats.totalRevenue | number}}</div>
+        <div class="change good">All time collected</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" *ngIf="!loading">
+    <div class="card">
+      <div class="card-head"><h3>📈 Revenue — Last 6 Months</h3></div>
+      <div class="rev-chart">
+        <div class="bar-item" *ngFor="let r of revenueData">
+          <div class="bar-val">₹{{r.total >= 1000 ? (r.total/1000).toFixed(1)+'k' : r.total}}</div>
+          <div class="bar-wrap">
+            <div class="bar-fill" [style.height.%]="r.total ? (r.total / maxRevenue * 100) : 3"></div>
+          </div>
+          <span class="bar-label">{{r.month}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>⚡ Quick Actions</h3></div>
+      <div class="actions-list">
+        <a routerLink="/admin/members" class="action-item">
+          <div class="ai-icon" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">➕</div>
+          <div><strong>Add Member</strong><small>Register new member</small></div>
+        </a>
+        <a routerLink="/admin/payments" class="action-item">
+          <div class="ai-icon" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">💳</div>
+          <div><strong>Collect Fee</strong><small>Record payment</small></div>
+        </a>
+        <a routerLink="/admin/attendance" class="action-item">
+          <div class="ai-icon" style="background:linear-gradient(135deg,#15803d,#22c55e)">📅</div>
+          <div><strong>Mark Attendance</strong><small>Daily check-in</small></div>
+        </a>
+        <a routerLink="/admin/trainers" class="action-item">
+          <div class="ai-icon" style="background:linear-gradient(135deg,#b45309,#f59e0b)">🏋️</div>
+          <div><strong>Manage Trainers</strong><small>View all trainers</small></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="!loading && members.length">
+    <div class="card-head">
+      <h3>👥 Recent Members</h3>
+      <a routerLink="/admin/members" class="view-all">View All →</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Plan</th><th>Trainer</th><th>Status</th><th>Fee</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let m of members">
+            <td class="mid">{{m.memberId}}</td>
+            <td><strong>{{m.name}}</strong><div class="sub">{{m.email}}</div></td>
+            <td>{{m.plan?.name}}</td>
+            <td>{{m.trainer?.name || '—'}}</td>
+            <td><span class="tag" [class]="m.status.toLowerCase()">{{m.status}}</span></td>
+            <td><span class="tag" [class]="m.feeStatus.toLowerCase()">{{m.feeStatus}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,117 @@
+<div class="pw">
+  <div class="ph">
+    <h2>Member Dashboard</h2>
+    <button type="button" class="refresh-btn" [disabled]="refreshing" (click)="loadDashboard()">
+      {{ refreshing ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading your dashboard...
+  </div>
+
+  <ng-container *ngIf="!loading && dashboard">
+    <div class="stats">
+      <div class="sc">
+        <div class="lbl">Membership Status</div>
+        <div class="val">{{ dashboard.membershipStatus }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Remaining Days</div>
+        <div class="val">{{ dashboard.remainingMembershipDays }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Total Attendance</div>
+        <div class="val">{{ dashboard.totalAttendance }}</div>
+      </div>
+      <div class="sc">
+        <div class="lbl">Unread Notifications</div>
+        <div class="val">{{ unreadNotifications }}</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ch">
+          <h3>Upcoming Classes</h3>
+        </div>
+        <div class="empty" *ngIf="!(dashboard.upcomingClasses || []).length">No upcoming classes yet.</div>
+        <div class="sched" *ngIf="(dashboard.upcomingClasses || []).length">
+          <div class="item" *ngFor="let c of dashboard.upcomingClasses">
+            <div class="dot"></div>
+            <div>
+              <strong>{{ c.title }}</strong>
+              <p>
+                {{ c.scheduledAt | date: 'dd MMM, hh:mm a' }}
+                • {{ c.durationMinutes }} mins
+              </p>
+              <small>Trainer: {{ c.trainerId?.name || 'TBA' }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch">
+          <h3>Latest Notifications</h3>
+        </div>
+        <div class="empty" *ngIf="!(dashboard.latestNotifications || []).length">No notifications.</div>
+        <div class="note-list" *ngIf="(dashboard.latestNotifications || []).length">
+          <div class="note" *ngFor="let n of dashboard.latestNotifications">
+            <strong>{{ n.title }}</strong>
+            <p>{{ n.message }}</p>
+            <small>{{ n.createdAt | date: 'dd MMM, hh:mm a' }}</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card wide">
+        <div class="ch">
+          <h3>Payment History</h3>
+          <small>Total: ₹{{ paymentTotal | number }}</small>
+        </div>
+        <div class="table-wrap" *ngIf="(dashboard.paymentHistory || []).length; else noPayments">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Plan</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of dashboard.paymentHistory">
+                <td>{{ p.invoiceNo }}</td>
+                <td>{{ p.plan?.name || '—' }}</td>
+                <td>₹{{ p.amount | number }}</td>
+                <td>{{ p.method }}</td>
+                <td>{{ p.date | date: 'dd MMM yyyy' }}</td>
+                <td><span class="tag">{{ p.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <ng-template #noPayments>
+        <div class="empty">No payment records yet.</div>
+      </ng-template>
+
+      <div class="card wide">
+        <div class="ch">
+          <h3>Attendance Trend (Last 30 Records)</h3>
+        </div>
+        <div class="chart">
+          <div class="bar" *ngFor="let row of attendanceSeries">
+            <div class="fill" [style.height.%]="row.count ? (row.count / maxAttendanceCount) * 100 : 3"></div>
+            <span>{{ row.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

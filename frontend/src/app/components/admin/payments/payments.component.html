@@ -1,0 +1,89 @@
+﻿<div class="pw">
+  <div class="ph">
+    <div><h2>Payments</h2><p>Track all fee collections and dues</p></div>
+    <button type="button" class="btn-primary" (click)="showForm=!showForm; msg=''">{{showForm ? '✕ Close' : '+ Record Payment'}}</button>
+  </div>
+
+  <div class="alert success" *ngIf="msg && msgType==='success'">{{msg}}</div>
+  <div class="alert error"   *ngIf="msg && msgType==='error'">{{msg}}</div>
+
+  <div class="summary-row">
+    <div class="sum-card s1"><div class="sl">Total Collected</div><div class="sv">₹{{totalCollected | number}}</div></div>
+    <div class="sum-card s2"><div class="sl">Pending Amount</div><div class="sv">₹{{totalPending | number}}</div></div>
+    <div class="sum-card s3"><div class="sl">Total Transactions</div><div class="sv">{{payments.length}}</div></div>
+  </div>
+
+  <div class="card" *ngIf="showForm">
+    <div class="card-head">
+      <h3>💳 Record New Payment</h3>
+      <button type="button" class="close-btn" (click)="showForm=false">✕</button>
+    </div>
+    <form [formGroup]="payForm" (ngSubmit)="save()">
+      <div class="form-grid">
+        <div class="field" [class.err]="isInvalid('member')">
+          <label>Member *</label>
+          <select formControlName="member">
+            <option value="">Select Member</option>
+            <option *ngFor="let m of members" [value]="m._id">{{m.memberId}} — {{m.name}}</option>
+          </select>
+          <span class="err-msg" *ngIf="isInvalid('member')">Required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('plan')">
+          <label>Plan *</label>
+          <select formControlName="plan" (change)="onPlanChange()">
+            <option value="">Select Plan</option>
+            <option *ngFor="let p of plans" [value]="p._id">{{p.name}} — ₹{{p.price}}</option>
+          </select>
+          <span class="err-msg" *ngIf="isInvalid('plan')">Required</span>
+        </div>
+        <div class="field" [class.err]="isInvalid('amount')">
+          <label>Amount (₹) *</label>
+          <input formControlName="amount" type="number" placeholder="Enter amount">
+          <span class="err-msg" *ngIf="isInvalid('amount')">Valid amount required</span>
+        </div>
+        <div class="field">
+          <label>Payment Method</label>
+          <select formControlName="method">
+            <option>Cash</option><option>UPI</option><option>Card</option><option>NetBanking</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select formControlName="status">
+            <option>Paid</option><option>Pending</option><option>Failed</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input formControlName="date" type="date">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" [disabled]="saving">{{saving ? 'Saving...' : '💾 Record Payment'}}</button>
+        <button class="btn-ghost" type="button" (click)="showForm=false">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>💳 All Transactions ({{payments.length}})</h3></div>
+    <div class="loading-wrap" *ngIf="loading"><div class="spinner"></div> Loading...</div>
+    <div class="empty" *ngIf="!loading && payments.length===0">No payments recorded yet.</div>
+    <div class="table-wrap" *ngIf="!loading && payments.length > 0">
+      <table>
+        <thead><tr><th>Invoice</th><th>Member</th><th>Plan</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of payments">
+            <td class="inv">{{p.invoiceNo}}</td>
+            <td><strong>{{p.member?.name}}</strong><div class="sub">{{p.member?.memberId}}</div></td>
+            <td>{{p.plan?.name || '—'}}</td>
+            <td><strong class="amount">₹{{p.amount | number}}</strong></td>
+            <td><span class="method-chip">{{p.method}}</span></td>
+            <td class="mid">{{p.date | date:'dd MMM yyyy'}}</td>
+            <td><span class="tag" [class]="p.status.toLowerCase()">{{p.status}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

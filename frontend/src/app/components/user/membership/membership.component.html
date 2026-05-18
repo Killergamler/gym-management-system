@@ -1,0 +1,67 @@
+<div class="pw">
+  <div class="ph">
+    <h2>Membership Plans</h2>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading plans...
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="member-status">
+      <div>
+        <small>Status</small>
+        <strong [class]="statusBadgeClass">{{ dashboard?.membershipStatus || 'Unknown' }}</strong>
+      </div>
+      <div>
+        <small>Remaining Days</small>
+        <strong>{{ dashboard?.remainingMembershipDays || 0 }}</strong>
+      </div>
+      <div>
+        <small>Expiry Date</small>
+        <strong>{{ dashboard?.membershipExpiryDate ? (dashboard.membershipExpiryDate | date: 'dd MMM yyyy') : 'N/A' }}</strong>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="plan-card" *ngFor="let plan of plans">
+        <h3>{{ plan.name }}</h3>
+        <p class="price">₹{{ plan.price | number }}</p>
+        <p class="duration">{{ plan.duration }} month{{ plan.duration > 1 ? 's' : '' }}</p>
+        <ul>
+          <li *ngFor="let f of plan.features">{{ f }}</li>
+        </ul>
+        <div class="actions">
+          <button type="button" (click)="openPurchase(plan, 'buy')">Buy</button>
+          <button type="button" (click)="openPurchase(plan, 'renew')">Renew</button>
+          <button type="button" (click)="openPurchase(plan, 'upgrade')">Upgrade</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="modal" *ngIf="modalOpen">
+    <div class="modal-card">
+      <h3>{{ action | titlecase }} Membership</h3>
+      <p class="muted">
+        Plan: <strong>{{ selectedPlan?.name }}</strong> • ₹{{ selectedPlan?.price | number }}
+      </p>
+      <form [formGroup]="purchaseForm" (ngSubmit)="submitPurchase()">
+        <label>Payment Method</label>
+        <select formControlName="method">
+          <option>Cash</option>
+          <option>UPI</option>
+          <option>Card</option>
+          <option>NetBanking</option>
+        </select>
+        <div class="modal-actions">
+          <button type="submit" class="primary" [disabled]="processing">{{ processing ? 'Processing...' : 'Confirm' }}</button>
+          <button type="button" class="ghost" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

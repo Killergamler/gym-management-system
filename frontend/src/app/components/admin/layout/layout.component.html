@@ -1,0 +1,42 @@
+<div class="app-shell">
+  <div class="sidebar-overlay" [class.show]="sidebarOpen" (click)="closeSidebar()"></div>
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-logo">
+      <div class="logo-icon">💪</div>
+      <div><h1>GymPro<span class="x">X</span></h1></div>
+    </div>
+    <div class="nav-label">Main Menu</div>
+    <nav class="nav">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-btn"
+      >
+        <span class="nb-icon">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-badge">
+        <div class="avatar">⚙️</div>
+        <div><p>{{ user?.name }}</p><small>Administrator</small></div>
+      </div>
+      <button type="button" class="btn-logout" (click)="logout()">Sign Out</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button type="button" class="mob-btn" (click)="toggleSidebar()">☰</button>
+      <span class="topbar-brand">GymPro X Admin</span>
+      <div class="topbar-right">
+        <span class="notif">🔔</span>
+        <span class="user-chip">{{ user?.name }}</span>
+      </div>
+    </header>
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

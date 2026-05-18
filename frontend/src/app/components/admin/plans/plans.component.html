@@ -1,0 +1,74 @@
+<div class="pw">
+  <div class="ph">
+    <div>
+      <h2>Membership Plans</h2>
+      <p>Manage plan pricing, duration, and availability</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="openAdd()">{{ showForm ? 'Editing…' : '+ Add Plan' }}</button>
+  </div>
+
+  <div class="alert success" *ngIf="msg">{{ msg }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <div class="card" *ngIf="showForm">
+    <div class="card-head">
+      <h3>{{ editId ? 'Edit Plan' : 'Create Plan' }}</h3>
+      <button type="button" class="close-btn" (click)="showForm = false">✕</button>
+    </div>
+    <form [formGroup]="planForm" (ngSubmit)="savePlan()">
+      <div class="form-grid">
+        <div class="field">
+          <label>Plan Name</label>
+          <input formControlName="name" placeholder="Premium Plus" />
+        </div>
+        <div class="field">
+          <label>Duration (months)</label>
+          <input formControlName="duration" type="number" min="1" />
+        </div>
+        <div class="field">
+          <label>Price</label>
+          <input formControlName="price" type="number" min="1" />
+        </div>
+        <div class="field full">
+          <label>Features (comma separated)</label>
+          <textarea formControlName="features" rows="3" placeholder="Gym Access, Sauna, Personal Trainer"></textarea>
+        </div>
+        <div class="field chk">
+          <label>
+            <input type="checkbox" formControlName="isActive" />
+            Active plan
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Plan' }}</button>
+        <button class="btn-ghost" type="button" (click)="showForm = false">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+    Loading plans...
+  </div>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="plan-card" *ngFor="let plan of plans">
+      <div class="plan-head">
+        <h3>{{ plan.name }}</h3>
+        <span class="status" [class.off]="!plan.isActive">{{ plan.isActive ? 'Active' : 'Inactive' }}</span>
+      </div>
+      <p class="price">₹{{ plan.price | number }}</p>
+      <p class="duration">{{ plan.duration }} month{{ plan.duration > 1 ? 's' : '' }}</p>
+      <ul>
+        <li *ngFor="let feature of plan.features">{{ feature }}</li>
+      </ul>
+      <div class="plan-actions">
+        <button type="button" class="btn-edit" (click)="openEdit(plan)">Edit</button>
+        <button type="button" class="btn-del" [disabled]="deleting === plan._id" (click)="removePlan(plan)">
+          {{ deleting === plan._id ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
