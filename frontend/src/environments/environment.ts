@@ -1,4 +1,4 @@
 ﻿export const environment = {
-  production: false,
-  apiUrl: 'https://gym-management-system-one-kappa.vercel.app/api'
+  production: true,
+  apiUrl: 'https://gym-management-system-s0cr.onrender.com/api'
 };
