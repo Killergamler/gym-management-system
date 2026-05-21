@@ -9,13 +9,16 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://gym-management-system-steel.vercel.app',
-  'https://gym-management-system-cb1gbv0oy-killergamlers-projects.vercel.app'
+  'https://gym-management-system-steel.vercel.app'
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.includes('vercel.app')
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
