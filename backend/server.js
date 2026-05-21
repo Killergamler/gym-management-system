@@ -11,8 +11,11 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://gym-management-system-4fj0fvsld-killergamlers-projects.vercel.app",
-    credentials: true,
+    origin: [
+      "http://localhost:4200",
+      "https://gym-management-system-4fj0fvsld-killergamlers-projects.vercel.app"
+    ],
+    credentials: true
   })
 );
 app.use(express.json());
