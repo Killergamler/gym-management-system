@@ -7,25 +7,14 @@ const { connectDB } = require('./config/db');
 
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:4200',
-  'https://gym-management-system-steel.vercel.app'
-];
+const cors = require("cors");
 
-app.use(cors({
-  origin: function(origin, callback) {
-    if (
-      !origin ||
-      allowedOrigins.includes(origin) ||
-      origin.includes('vercel.app')
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "https://gym-management-system-4fj0fvsld-killergamlers-projects.vercel.app",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
